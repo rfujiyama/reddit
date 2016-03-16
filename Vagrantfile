@@ -65,12 +65,14 @@ guest_mem = "4096"
 guest_swap = "4096"
 hostname = "reddit.local"
 
+box_url_prefix="https://cloud-images.ubuntu.com/vagrant/trusty/current"
+box_url_file="trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
 Vagrant.configure(2) do |config|
   config.vm.box = "trusty-cloud-image"
-  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/20160303/trusty-server-cloudimg-amd64-vagrant-disk1.box"
-  config.vm.box_download_checksum = "426f479f529d652fccd0dc7b07135b5e94d95c9237078f443f9f45d18f877608"
+  config.vm.box_url = "#{box_url_prefix}/#{box_url_file}"
   config.vm.box_download_checksum_type = "sha256"
+  config.vm.box_download_checksum = `curl -s #{box_url_prefix}/SHA256SUMS | grep #{box_url_file}$ | cut -d' ' -f1`.chomp
 
   # mount the host shared folder
   config.vm.synced_folder code_share_host_path, code_share_guest_path, mount_options: ["ro"]
