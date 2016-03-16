@@ -44,6 +44,7 @@
 # If you want to create additional vagrant boxes you can copy this file
 # elsewhere, but be sure to update `code_share_host_path` to be the absolute
 # path to {ROOTDIR}.
+require 'rubygems'
 
 vagrant_user = "vagrant"
 
@@ -73,7 +74,8 @@ Vagrant.configure(2) do |config|
   config.vm.box_download_checksum_type = "sha256"
 
   # mount the host shared folder
-  config.vm.synced_folder code_share_host_path, code_share_guest_path, mount_options: ["ro"]
+  mount_options = ["ro"] if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new("1.5.0")
+  config.vm.synced_folder code_share_host_path, code_share_guest_path, mount_options: mount_options
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = guest_mem
